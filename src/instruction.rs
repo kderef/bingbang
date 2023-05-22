@@ -1,10 +1,6 @@
-pub const PRINT: char = 'p';
-pub const PRINTLN: char = 'P';
-pub const READ: char = 'i';
 
 pub const STR_DELIM: char = '\'';
 
-pub const EXIT: char = 'q';
 pub const PUSH_DELIM: char = ',';
 
 pub const DIV: char = '/';
@@ -12,18 +8,13 @@ pub const PLUS: char = '+';
 pub const SUB: char = '-';
 pub const MUL: char = '*';
 pub const EQUALS: char = '=';
-pub const SUM: char = 's';
 
-pub const PARSE_NUM: char = 'n';
-pub const CLEAR_STACK: char = 'c';
-pub const PRINT_STACK: char = 'a';
-pub const PRINT_STACK_LN: char = 'A';
-pub const SHOW_STACK: char = 'S';
+pub const IF: char = '?';
+pub const NOT: char = '!';
 
 pub const SYSCALL: char = '$';
 
-pub const TIME: char = 't';
-pub const TIME_FMT: char = 'T';
+pub const INTERACTIVE_COMMENT: char = ';';
 
 #[derive(Debug, PartialEq)]
 pub enum Instr {
@@ -46,7 +37,10 @@ pub enum Instr {
     Time,
     TimeFmt,
 
+    IfStmt(Vec<Instr>),
+
     Eq,
+    Not,
     ClearStack,
     PrintStack,
     PrintStackLn,

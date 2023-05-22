@@ -76,29 +76,95 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
                 instructions.push(Instr::PushStr(tot_str));
                 continue;
             }
-            PRINT => instructions.push(Instr::Print),
-            PRINTLN => instructions.push(Instr::PrintLn),
+            'a' => instructions.push(Instr::PrintStack),
+            'A' => instructions.push(Instr::PrintStackLn),
+            'b' => {},
+            'B' => {},
+            'c' => instructions.push(Instr::ClearStack),
+            'C' => {},
+            'd' => {},
+            'D' => {},
+            'e' => {},
+            'E' => {},
+            'f' => {},
+            'F' => {},
+            'g' => {},
+            'G' => {},
+            'h' => {},
+            'H' => {},
+            'i' => instructions.push(Instr::Read),
+            'I' => {},
+            'j' => {},
+            'J' => {},
+            'k' => {},
+            'K' => {},
+            'l' => {},
+            'L' => {},
+            'm' => {},
+            'M' => {},
+            'n' => instructions.push(Instr::ParseNum),
+            'N' => {},
+            'o' => {},
+            'O' => {},
+            'p' => instructions.push(Instr::Print),
+            'P' => instructions.push(Instr::PrintLn),
+            'q' => instructions.push(Instr::Exit),
+            'Q' => {},
+            'r' => {},
+            'R' => {},
+            's' => instructions.push(Instr::Sum),
+            'S' => instructions.push(Instr::ShowStack),
+            't' => instructions.push(Instr::Time),
+            'T' => instructions.push(Instr::TimeFmt),
+            'u' => {},
+            'U' => {},
+            'v' => {},
+            'V' => {},
+            'w' => {},
+            'W' => {},
+            'x' => {},
+            'X' => {},
+            'y' => {},
+            'Y' => {},
+            'z' => {},
+            'Z' => {}
 
             PLUS => instructions.push(Instr::Plus),
             SUB => instructions.push(Instr::Sub),
             DIV => instructions.push(Instr::Div),
             MUL => instructions.push(Instr::Mul),
-            SUM => instructions.push(Instr::Sum),
 
-            READ => instructions.push(Instr::Read),
             EQUALS => instructions.push(Instr::Eq),
-
-            EXIT => instructions.push(Instr::Exit),
-            PARSE_NUM => instructions.push(Instr::ParseNum),
-            CLEAR_STACK => instructions.push(Instr::ClearStack),
-            PRINT_STACK => instructions.push(Instr::PrintStack),
-            PRINT_STACK_LN => instructions.push(Instr::PrintStackLn),
-            SHOW_STACK => instructions.push(Instr::ShowStack),
-
             SYSCALL => instructions.push(Instr::Syscall),
+            NOT => instructions.push(Instr::Not),
+            IF => {
+                // 1 1 = ? ['1 == '1P]
+                let mut next = chars.remove(0);
 
-            TIME => instructions.push(Instr::Time),
-            TIME_FMT => instructions.push(Instr::TimeFmt),
+                while next.is_whitespace() {
+                    next = chars.remove(0);
+                }
+
+                if next != '[' {
+                    return Err(format!("unexpected token after '{IF}': expected '[', but got '{next}'."))
+                }
+
+                let mut body = String::new();
+
+                while next != ']' {
+                    next = chars.remove(0);
+                    body.push(next);
+                }
+                body.pop().unwrap();
+                let mut parsed_body = match parse_bng(body) {
+                    Ok(v) => v,
+                    Err(e) => return Err(e)
+                };
+                parsed_body.pop();
+
+                instructions.push(Instr::IfStmt(parsed_body));
+            },
+
 
             _ => return Err(format!("unkown token: {}", c)),
         }

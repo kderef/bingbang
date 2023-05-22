@@ -37,6 +37,7 @@ operators require at least 2 elements on the stack
 | ''        | push string                           | -                 |
 | 0..9      | push number                           | -                 |
 | ,         | ignore (push)                         | -                 |
+| ?         | if                                    | stack length >= 2 |
 | a         | print stack                           | -                 |
 | A         | print stack with newlines             | -                 |
 | b         |                                       |                   |

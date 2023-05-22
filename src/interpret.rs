@@ -1,7 +1,7 @@
 use crate::*;
 
 pub fn interpret_instructions(
-    instructions: Vec<Instr>,
+    instructions: &Vec<Instr>,
     stack: &mut Vec<StackVal>,
 ) -> Result<(), String> {
     for (idx, inst) in instructions.iter().enumerate() {
@@ -195,16 +195,17 @@ pub fn interpret_instructions(
                         ))
                     }
                 }
-            },
+            }
             Instr::Time => {
                 let time = chrono::Local::now().format("%d-%m-%Y");
                 stack.push(StackVal::String(time.to_string()));
-            },
+            }
             Instr::TimeFmt => {
                 if stack.len() < 1 {
-                    return Err(format!("while performing [{:?}] at index {}, stack is empty.",
+                    return Err(format!(
+                        "while performing [{:?}] at index {}, stack is empty.",
                         inst, idx
-                    ))
+                    ));
                 }
                 let last = stack.pop().unwrap();
 
@@ -215,11 +216,52 @@ pub fn interpret_instructions(
                         return Err(format!(
                             "while trying to perform [{:?}] at index {}, expected type String, but got {:?}.",
                             inst, idx, last
-                        ))
+                        ));
                     }
                 };
 
                 stack.push(StackVal::String(to_push));
+            },
+            Instr::Not => {
+                if stack.len() < 1 {
+                    return Err(format!(
+                        "while performing [{:?}] at index {}, stack is empty.",
+                        inst, idx
+                    ))
+                }
+                let last = stack.pop().unwrap();
+
+                if let StackVal::Bool(b) = last {
+                    stack.push(StackVal::Bool(!b));
+                } else {
+                    return Err(
+                        format!("while trying to perform operation [{:?}], expected Bool(), got {:?}", inst, last)
+                    )
+                }
+            }
+            Instr::IfStmt(body) => {
+                if stack.len() < 1 {
+                    return Err(format!(
+                        "while performing [{:?}] at index {}, stack is empty.",
+                        inst, idx
+                    ));
+                }
+                let last = stack.pop().unwrap();
+                let cond = if let StackVal::Bool(b) = last {
+                    b
+                } else {
+                    return Err(format!(
+                        "while performing [{:?}] at index {}, expected Bool() on stack, got {:?}",
+                        inst, idx, last
+                    ));
+                };
+
+                if cond {
+                    match interpret_instructions(body, stack) {
+                        Ok(_) => {},
+                        Err(e) => return Err(e)
+                    }
+                }
             }
         }
     }

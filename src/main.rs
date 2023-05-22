@@ -2,14 +2,14 @@ use std::{env, fs, path::Path};
 
 mod errhandling;
 mod instruction;
-mod stackval;
-mod parse;
 mod interpret;
+mod parse;
+mod stackval;
 
 use instruction::*;
-use stackval::StackVal;
-use parse::parse_bng;
 use interpret::interpret_instructions;
+use parse::parse_bng;
+use stackval::StackVal;
 
 fn perform_math_op(operands: (f32, f32), operation: &Instr) -> StackVal {
     match operation {
@@ -35,7 +35,7 @@ fn main() {
         let mut buf = String::new();
         let stdin = std::io::stdin();
 
-        println!("\x1b[92mbingbang interpreter\n   -> press q to quit\x1b[0m");
+        println!("\x1b[92mbingbang interpreter\n\x1b[93m   -> press q to quit\n   -> ; to comment\n\x1b[0m");
 
         let mut stack: Vec<StackVal> = Vec::new();
 
@@ -48,6 +48,10 @@ fn main() {
                 .read_line(&mut buf)
                 .expect("failed to read from stdin");
 
+            if buf.starts_with(INTERACTIVE_COMMENT) {
+                continue;
+            }
+
             let mut instructions = match parse_bng(buf.trim_end().into()) {
                 Ok(v) => v,
                 Err(e) => {
@@ -58,7 +62,7 @@ fn main() {
             if instructions.len() >= 1 {
                 instructions.pop();
             }
-            match interpret_instructions(instructions, &mut stack) {
+            match interpret_instructions(&instructions, &mut stack) {
                 Ok(_) => (),
                 Err(e) => err!(e),
             }
@@ -84,7 +88,7 @@ fn main() {
 
     let mut stack: Vec<StackVal> = Vec::new();
 
-    match interpret_instructions(instructions, &mut stack) {
+    match interpret_instructions(&instructions, &mut stack) {
         Ok(_) => (),
         Err(e) => err!(e),
     }
