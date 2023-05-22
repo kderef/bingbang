@@ -93,7 +93,9 @@ pub fn interpret_instructions(
             Instr::Read => {
                 let mut buf = String::new();
                 std::io::stdin().read_line(&mut buf).unwrap();
-                stack.push(StackVal::String(buf));
+                stack.push(StackVal::String(
+                    buf.split_once('\n').unwrap().0.to_string(),
+                ));
             }
             Instr::ParseNum => {
                 if stack.len() < 1 {
@@ -144,7 +146,7 @@ pub fn interpret_instructions(
                     pflush!();
                 }
                 println!("");
-            },
+            }
             Instr::PrintStackLn => {
                 if stack.len() == 0 {
                     continue;
@@ -152,10 +154,46 @@ pub fn interpret_instructions(
                 while stack.len() != 0 {
                     println!("{}", stack.pop().unwrap());
                 }
-            },
+            }
             Instr::ShowStack => {
                 for s in stack.iter() {
                     println!("{s}");
+                }
+            }
+            Instr::Syscall => {
+                if stack.len() < 2 {
+                    return Err(format!(
+                        "while performing [{:?}] at index {}, stack must contain 2 values.",
+                        inst, idx
+                    ));
+                }
+
+                let oper1 = match stack.pop().unwrap() {
+                    StackVal::Number(n) => n,
+                    _ => {
+                        return Err(format!(
+                            "while trying to [{:?}] at index {}, type is not number.",
+                            inst, idx,
+                        ))
+                    }
+                };
+                let oper2 = stack.pop().unwrap();
+
+                match oper1 as i32 {
+                    0 => {
+                        // exit
+                        if let StackVal::Number(n) = oper2 {
+                            std::process::exit(n as i32);
+                        } else {
+                            return Err(format!("for syscall argument 0, got invalid type. Expected Number, got {:?}", oper2));
+                        }
+                    }
+                    _ => {
+                        return Err(format!(
+                            "at index {}: unkown syscall argument: {}",
+                            idx, oper1
+                        ))
+                    }
                 }
             }
         }

@@ -95,11 +95,11 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
             PRINT_STACK_LN => instructions.push(Instr::PrintStackLn),
             SHOW_STACK => instructions.push(Instr::ShowStack),
 
+            SYSCALL => instructions.push(Instr::Syscall),
+
             _ => return Err(format!("unkown token: {}", c)),
         }
     }
-
-    println!("{instructions:?}");
 
     instructions.push(Instr::Exit);
 

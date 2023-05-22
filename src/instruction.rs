@@ -20,6 +20,7 @@ pub const PRINT_STACK: char = 'a';
 pub const PRINT_STACK_LN: char = 'A';
 pub const SHOW_STACK: char = 'S';
 
+pub const SYSCALL: char = '$';
 
 #[derive(Debug, PartialEq)]
 pub enum Instr {
@@ -37,6 +38,8 @@ pub enum Instr {
 
     PushStr(String),
     PushNum(f32),
+
+    Syscall,
 
     Eq,
     ClearStack,
