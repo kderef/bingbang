@@ -1,4 +1,3 @@
-
 pub const STR_DELIM: char = '\'';
 
 pub const PUSH_DELIM: char = ',';
@@ -16,6 +15,9 @@ pub const SYSCALL: char = '$';
 pub const GT: char = '>';
 pub const LT: char = '<';
 pub const RANGE: char = '.';
+
+pub const FN_DEF: char = '@';
+pub const FN_CALL: char = ':';
 
 pub const INTERACTIVE_COMMENT: char = ';';
 
@@ -37,6 +39,9 @@ pub enum Instr {
     Reverse,
     GenRange,
     FlipStack,
+
+    FnDef,
+    FnCall,
 
     Pop,
 

@@ -170,6 +170,8 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
 
                 instructions.push(Instr::IfStmt(parsed_body));
             },
+            FN_DEF => instructions.push(Instr::FnDef),
+            FN_CALL => instructions.push(Instr::FnCall),
 
 
             _ => return Err(format!("unkown token: {}", c)),

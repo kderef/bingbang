@@ -349,7 +349,9 @@ pub fn interpret_instructions(
             },
             Instr::FlipStack => {
                 stack.reverse();
-            }
+            },
+            Instr::FnDef => {},
+            Instr::FnCall => {}
         }
     }
     Ok(())

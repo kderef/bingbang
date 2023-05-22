@@ -5,13 +5,13 @@ mod instruction;
 mod interpret;
 mod parse;
 mod stackval;
-mod generate_asm;
+mod compile;
 
 use instruction::*;
 use interpret::interpret_instructions;
 use parse::parse_bng;
 use stackval::StackVal;
-use generate_asm::generate_asm;
+use compile::compile;
 
 fn perform_math_op(operands: (f32, f32), operation: &Instr) -> StackVal {
     match operation {
@@ -64,6 +64,7 @@ fn main() {
             if instructions.len() >= 1 {
                 instructions.pop();
             }
+
             match interpret_instructions(&instructions, &mut stack) {
                 Ok(_) => (),
                 Err(e) => err!(e),
@@ -98,7 +99,7 @@ fn main() {
 
 #[cfg(test)]
 mod test {
-    use crate::{parse_bng, Instr, generate_asm::generate_asm};
+    use crate::{parse_bng, Instr, compile::compile};
     #[test]
     fn hello_world() {
         let parsed = parse_bng("'Hello World'P".into()).unwrap();
@@ -145,7 +146,7 @@ mod test {
 
     #[test]
     fn test_asm() {
-        let mut instructions = vec![Instr::Exit];
-        generate_asm(&mut instructions);
+        let mut instructions = vec![Instr::PushNum(1.0), Instr::Exit];
+        compile(&mut instructions);
     }
 }
