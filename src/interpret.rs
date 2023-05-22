@@ -12,7 +12,7 @@ pub fn interpret_instructions(
             Instr::Print => {
                 if stack.len() < 1 {
                     return Err(format!(
-                        "while performing instruction [Print] at index {}, stack empty.",
+                        "while performing instruction [{inst:?}] at index {}, stack empty.",
                         idx
                     ));
                 }
@@ -21,6 +21,13 @@ pub fn interpret_instructions(
                 pflush!();
             }
             Instr::PrintLn => {
+                if stack.len() < 1 {
+                    return Err(format!(
+                        "while performing instruction [{inst:?}] at index {}, stack empty.",
+                        idx
+                    ));
+                }
+
                 println!("{last}", last = stack.pop().unwrap());
             }
 
@@ -262,6 +269,86 @@ pub fn interpret_instructions(
                         Err(e) => return Err(e)
                     }
                 }
+            },
+            Instr::GreaterThan | Instr::LessThan => {
+                if stack.len() < 2 {
+                    return Err(format!(
+                        "while performing [{:?}] at index {}, not enough elements in stack.",
+                        inst, idx
+                    ))
+                }
+
+                let elem1 = stack.pop().unwrap();
+                let elem2 = stack.pop().unwrap();
+
+                let oper1;
+                let oper2;
+
+                if let StackVal::Number(n) = elem1 {
+                    oper1 = n;
+                } else {
+                    return Err(format!("while trying to perform [{inst:?}], Not a Number: {elem1:?}"))
+                }
+
+                if let StackVal::Number(n) = elem2 {
+                    oper2 = n;
+                } else {
+                    return Err(format!("while trying to perform [{inst:?}], Not a Number: {elem2:?}"))
+                }
+
+                let to_push = if *inst == Instr::GreaterThan {
+                    StackVal::Bool(oper1 > oper2)
+                } else if *inst == Instr::LessThan {
+                    StackVal::Bool(oper1 < oper2)
+                } else {unimplemented!()};
+                stack.push(to_push);
+            },
+            Instr::Reverse => {
+                if stack.len() < 1 {
+                    return Err(format!("while trying to perform [{inst:?}] at index {idx}, stack is empty."))
+                }
+                let last = stack.pop().unwrap();
+                if let StackVal::String(s) = last {
+                    stack.push(StackVal::String(s.chars().rev().collect()))
+                } else {
+                    return Err(format!("while trying to perform [{inst:?}] at index {idx}, expected String(), got {inst:?}"))
+                }
+            },
+            Instr::Pop => {
+                if stack.len() >= 1 {
+                    stack.pop();
+                }
+            },
+            Instr::GenRange => {
+                if stack.len() < 2 {
+                    return Err(format!(
+                        "while trying to perform [{inst:?}] at index {idx}, stack length too short."
+                    ))
+                }
+
+                let elem1 = stack.pop().unwrap();
+                let elem2 = stack.pop().unwrap();
+
+                let oper1;
+                let oper2;
+
+                if let StackVal::Number(n) = elem1 {
+                    oper1 = n as i32;
+                } else {
+                    return Err(format!("failed to [{inst:?}]: Not a Number: {elem1:?}"))
+                }
+                if let StackVal::Number(n) = elem2 {
+                    oper2 = n as i32;
+                } else {
+                    return Err(format!("failed to [{inst:?}]: Not a Number: {elem2:?}"))
+                }
+
+                for i in oper1..oper2 {
+                    stack.push(StackVal::Number(i as f32));
+                }
+            },
+            Instr::FlipStack => {
+                stack.reverse();
             }
         }
     }

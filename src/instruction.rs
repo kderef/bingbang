@@ -13,6 +13,9 @@ pub const IF: char = '?';
 pub const NOT: char = '!';
 
 pub const SYSCALL: char = '$';
+pub const GT: char = '>';
+pub const LT: char = '<';
+pub const RANGE: char = '.';
 
 pub const INTERACTIVE_COMMENT: char = ';';
 
@@ -26,9 +29,16 @@ pub enum Instr {
     Plus,
     Sub,
     Mul,
+    GreaterThan,
+    LessThan,
     Sum,
 
     ParseNum,
+    Reverse,
+    GenRange,
+    FlipStack,
+
+    Pop,
 
     PushStr(String),
     PushNum(f32),

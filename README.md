@@ -18,17 +18,27 @@ then it is run by the interpreter.
 
 ---
 
+# todo
+
+- [ ] nested if statements
+- [ ] functions (goto)
+- [ ] error handling
+- [ ] Assembly backend
+
+
 # operators
 
 operators require at least 2 elements on the stack
 
-| operator | instruction |
-| -------- | ----------- |
-| +        | plus        |
-| -        | sub         |
-| *        | mul         |
-| /        | div         |
-| =        | is equal to |
+| operator | instruction  |
+| -------- | ------------ |
+| +        | plus         |
+| -        | sub          |
+| *        | mul          |
+| /        | div          |
+| =        | is equal to  |
+| >        | greater than |
+| <        | less than    |
 
 # character table
 
@@ -44,7 +54,7 @@ operators require at least 2 elements on the stack
 | B         |                                       |                   |
 | c         | clear stack                           | -                 |
 | C         |                                       |                   |
-| d         |                                       |                   |
+| d         | drop element from stack               | stack length >= 1 |
 | D         |                                       |                   |
 | e         |                                       |                   |
 | E         |                                       |                   |
@@ -72,8 +82,8 @@ operators require at least 2 elements on the stack
 | P         | print line                            | stack length >= 1 |
 | q         | quit                                  | -                 |
 | Q         |                                       |                   |
-| r         |                                       |                   |
-| R         |                                       |                   |
+| r         | reverse string                        | stack length >= 1 |
+| R         | reverse stack                         | -                 |
 | s         | sum                                   | stack length >= 1 |
 | S         | show stack (not popping)              |                   |
 | t         | get the time in the format %d-%m-%Y   | -                 |

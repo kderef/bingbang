@@ -82,7 +82,7 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
             'B' => {},
             'c' => instructions.push(Instr::ClearStack),
             'C' => {},
-            'd' => {},
+            'd' => instructions.push(Instr::Pop),
             'D' => {},
             'e' => {},
             'E' => {},
@@ -110,8 +110,8 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
             'P' => instructions.push(Instr::PrintLn),
             'q' => instructions.push(Instr::Exit),
             'Q' => {},
-            'r' => {},
-            'R' => {},
+            'r' => instructions.push(Instr::Reverse),
+            'R' => instructions.push(Instr::FlipStack),
             's' => instructions.push(Instr::Sum),
             'S' => instructions.push(Instr::ShowStack),
             't' => instructions.push(Instr::Time),
@@ -134,6 +134,11 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
             DIV => instructions.push(Instr::Div),
             MUL => instructions.push(Instr::Mul),
 
+            GT => instructions.push(Instr::GreaterThan),
+            LT => instructions.push(Instr::LessThan),
+
+            RANGE => instructions.push(Instr::GenRange),
+
             EQUALS => instructions.push(Instr::Eq),
             SYSCALL => instructions.push(Instr::Syscall),
             NOT => instructions.push(Instr::Not),
@@ -150,6 +155,7 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
                 }
 
                 let mut body = String::new();
+
 
                 while next != ']' {
                     next = chars.remove(0);
