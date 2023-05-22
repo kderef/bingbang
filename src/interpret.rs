@@ -195,6 +195,31 @@ pub fn interpret_instructions(
                         ))
                     }
                 }
+            },
+            Instr::Time => {
+                let time = chrono::Local::now().format("%d-%m-%Y");
+                stack.push(StackVal::String(time.to_string()));
+            },
+            Instr::TimeFmt => {
+                if stack.len() < 1 {
+                    return Err(format!("while performing [{:?}] at index {}, stack is empty.",
+                        inst, idx
+                    ))
+                }
+                let last = stack.pop().unwrap();
+
+                let to_push = {
+                    if let StackVal::String(fmt) = last {
+                        chrono::Local::now().format(&fmt).to_string()
+                    } else {
+                        return Err(format!(
+                            "while trying to perform [{:?}] at index {}, expected type String, but got {:?}.",
+                            inst, idx, last
+                        ))
+                    }
+                };
+
+                stack.push(StackVal::String(to_push));
             }
         }
     }

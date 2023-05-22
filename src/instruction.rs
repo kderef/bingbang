@@ -22,6 +22,9 @@ pub const SHOW_STACK: char = 'S';
 
 pub const SYSCALL: char = '$';
 
+pub const TIME: char = 't';
+pub const TIME_FMT: char = 'T';
+
 #[derive(Debug, PartialEq)]
 pub enum Instr {
     Print,
@@ -40,6 +43,8 @@ pub enum Instr {
     PushNum(f32),
 
     Syscall,
+    Time,
+    TimeFmt,
 
     Eq,
     ClearStack,

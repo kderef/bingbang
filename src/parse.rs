@@ -97,6 +97,9 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
 
             SYSCALL => instructions.push(Instr::Syscall),
 
+            TIME => instructions.push(Instr::Time),
+            TIME_FMT => instructions.push(Instr::TimeFmt),
+
             _ => return Err(format!("unkown token: {}", c)),
         }
     }
