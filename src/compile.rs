@@ -25,7 +25,7 @@ pub fn compile(instructions: &mut Vec<Instr>) {
             Instr::PushNum(n) => {
                 writeln!(out_file, "{}", format!("; --- push {n} to stack\nPUSH {}", *n as i32));
             },
-            Instr::Exit => writeln!(out_file, "{ASM_EXIT}").unwrap(),
+            Instr::Exit => todo!(),
             _ => todo!()
         }
     }

@@ -19,7 +19,12 @@ pub const RANGE: char = '.';
 pub const FN_DEF: char = '@';
 pub const FN_CALL: char = ':';
 
+pub const LOOP_IN: char = '(';
+pub const LOOP_OUT: char = ')';
+
 pub const INTERACTIVE_COMMENT: char = ';';
+
+type Body = Vec<Instr>;
 
 #[derive(Debug, PartialEq)]
 pub enum Instr {
@@ -43,7 +48,11 @@ pub enum Instr {
     FnDef,
     FnCall,
 
+    Loop(Body),
+
     Pop,
+
+    ClearScreen,
 
     PushStr(String),
     PushNum(f32),
@@ -52,7 +61,7 @@ pub enum Instr {
     Time,
     TimeFmt,
 
-    IfStmt(Vec<Instr>),
+    IfStmt(Body),
 
     Eq,
     Not,

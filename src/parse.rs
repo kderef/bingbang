@@ -81,7 +81,7 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
             'b' => {},
             'B' => {},
             'c' => instructions.push(Instr::ClearStack),
-            'C' => {},
+            'C' => instructions.push(Instr::ClearScreen),
             'd' => instructions.push(Instr::Pop),
             'D' => {},
             'e' => {},
@@ -172,8 +172,7 @@ pub fn parse_bng(line: String) -> Result<Vec<Instr>, String> {
             },
             FN_DEF => instructions.push(Instr::FnDef),
             FN_CALL => instructions.push(Instr::FnCall),
-
-
+            
             _ => return Err(format!("unkown token: {}", c)),
         }
     }

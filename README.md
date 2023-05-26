@@ -25,7 +25,6 @@ then it is run by the interpreter.
 - [ ] error handling
 - [ ] Assembly backend
 
-
 # operators
 
 operators require at least 2 elements on the stack
@@ -53,8 +52,8 @@ operators require at least 2 elements on the stack
 | b         |                                       |                   |
 | B         |                                       |                   |
 | c         | clear stack                           | -                 |
-| C         |                                       |                   |
-| d         | drop element from stack               | stack length >= 1 |
+| C         | clear screen                          | -                 |
+| d         | drop element from stack               | -                 |
 | D         |                                       |                   |
 | e         |                                       |                   |
 | E         |                                       |                   |

@@ -351,7 +351,14 @@ pub fn interpret_instructions(
                 stack.reverse();
             },
             Instr::FnDef => {},
-            Instr::FnCall => {}
+            Instr::FnCall => {},
+            Instr::ClearScreen => {
+                print!("\x1b[2J\x1b[H");
+                pflush!();
+            },
+            Instr::Loop(body) => {
+                
+            }
         }
     }
     Ok(())
